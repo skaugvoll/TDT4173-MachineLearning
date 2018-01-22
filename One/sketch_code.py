@@ -73,7 +73,7 @@ class Linear_regression():
         return np.matrix(rows), np.matrix(classes)
 
 
-    def plotData(self):
+    def plotData3d(self):
         self.ax.set_xlabel('X1 Label')
         self.ax.set_ylabel('X2 Label')
         self.ax.set_zlabel('Y Label')
@@ -93,7 +93,7 @@ class Linear_regression():
         self.ax.scatter(self.x1axis,self.x2axis,self.yaxis)
         # self.fig.show()
 
-    def plotLine(self):
+    def plotLine3d(self):
         # hvis vi skal plott en linje, brukervi x1 og x2 fra alle eksempler, hvor y = vår h(x) for det treningseksemplet.
 
         calculatedY = []
@@ -166,14 +166,18 @@ class Linear_regression():
 
 
 
-def main():
+def main(task=1):
     lr = Linear_regression()
-    lr.plotData()
+    if task == 1:
+        lr.plotData3d()
     ######
     lr.train()
     lr.test()
     ######
-    lr.plotLine()
+    if task == 1:
+        lr.plotLine3d()
+
+
     sleep(5)
 
 
