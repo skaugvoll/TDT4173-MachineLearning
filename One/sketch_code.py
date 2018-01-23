@@ -1,44 +1,20 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.lines import Line2D
 import os
 from time import sleep
 import numpy as np
-
-
-# # Read in data
-# directory =  "datasets/regression/"
-# train_filename = directory + "train_2d_reg_data.csv"
-# test_filename = directory + "test_2d_reg_data.csv"
-#
-#
-# # dataset line : x1 x2 y (x, y, z)
-# x1axis = []
-# x2axis = []
-# yaxis =[]
-#
-# with open(os.path.abspath(train_filename)) as f:
-#     for l in f:
-#         coord = l.split(",")
-#         x1axis.append(float(coord[0]))
-#         x2axis.append(float(coord[1]))
-#         yaxis.append(float(coord[2]))
-#
-# # plot dataset
-# fig = plt.figure()
-# # ax = fig.add_subplot(111, projection='3d')
-# ax = Axes3D(fig)
-#
-# ax.scatter(x1axis,x2axis,yaxis)
-# ax.set_xlabel('X1 Label')
-# ax.set_ylabel('X2 Label')
-# ax.set_zlabel('Y Label')
-
 
 
 
 ####
 # Algoritm
 ####
+'''
+This need some refactoring!
+
+
+'''
 class Linear_regression():
     def __init__(self, trainingSet="train_2d_reg_data.csv", testingSet="test_2d_reg_data.csv"):
         self.directory =  "datasets/regression/"
@@ -50,8 +26,7 @@ class Linear_regression():
         self.weights = self.initWeights(self.trainingData, self.trainingClass)
 
         #
-        self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111, projection='3d')
+
 
     def readData(self, dataset):
         with open(os.path.abspath(dataset)) as d:
@@ -73,7 +48,51 @@ class Linear_regression():
         return np.matrix(rows), np.matrix(classes)
 
 
+
+    def plotData2d(self):
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot(111)
+
+        self.ax.set_xlabel('X Label')
+
+        self.x1axis = []
+        self.yaxis =[]
+
+        example = 0
+        for r in self.trainingData.getA():
+            # print(r)
+            self.x1axis.append(float(r[1]))
+            self.yaxis.append(float(self.trainingClass[example]))
+            example += 1
+
+        self.ax.scatter(self.x1axis,self.yaxis)
+        # self.fig.show()
+
+
+    def plotLine2d(self):
+        calculatedY = []
+        xaxis = []
+
+
+        for r in self.trainingData.getA():
+            xaxis.append(float(r[1]))
+
+        for r in self.trainingData:
+            calculatedY.append(float(self.hypothesis(r)))
+
+        # print(calculatedY)
+        self.ax.plot(xaxis, calculatedY, "r--")
+        self.fig.show()
+
+        # print(calculatedY)
+        print("Plottet line 2d")
+
+
     def plotData3d(self):
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot(111, projection='3d')
+
+
         self.ax.set_xlabel('X1 Label')
         self.ax.set_ylabel('X2 Label')
         self.ax.set_zlabel('Y Label')
@@ -89,9 +108,9 @@ class Linear_regression():
             self.yaxis.append(float(self.trainingClass[example]))
             example += 1
 
-
         self.ax.scatter(self.x1axis,self.x2axis,self.yaxis)
         # self.fig.show()
+
 
     def plotLine3d(self):
         # hvis vi skal plott en linje, brukervi x1 og x2 fra alle eksempler, hvor y = vår h(x) for det treningseksemplet.
@@ -101,10 +120,10 @@ class Linear_regression():
         for r in self.trainingData:
             calculatedY.append(float(self.hypothesis(r)))
 
+
         # self.ax.scatter(self.x1axis, self.x2axis, calculatedY, color="red")
         self.ax.plot_trisurf(self.x1axis, self.x2axis, calculatedY, color="red")
         self.fig.show()
-
         print("Plottet surface")
 
 
@@ -167,19 +186,25 @@ class Linear_regression():
 
 
 def main(task=1):
-    lr = Linear_regression()
+    # lr = Linear_regression() # 3d
     if task == 1:
+        lr = Linear_regression() # 3d
         lr.plotData3d()
+    else:
+        lr = Linear_regression(trainingSet="train_1d_reg_data.csv", testingSet="test_1d_reg_data.csv")
+        lr.plotData2d()
     ######
     lr.train()
     lr.test()
     ######
     if task == 1:
         lr.plotLine3d()
+    else:
+        lr.plotLine2d()
+
+    sleep(10)
 
 
-    sleep(5)
 
-
-
-main()
+if __name__ == "__main__":
+    main(0) # 0 = 2d, 1 = 3d
