@@ -2,6 +2,11 @@
 # Linear Regression
 Finn en rett linje mellom datapunkt, som gir minst distanse fra alle punkt til linjen.
 
+`Linear_regression.py`
+
+## Run code:
+To change between linear regression on `2d` and `3d` dataset, simply pass in `0` or `1` respectively to the `main` function.
+
 ## Hypothesis h(x)
 ### if we know one feature
 Linear function
@@ -26,3 +31,5 @@ Linear function
 
 ### numpy matrix transpose
 `np.matrix.transpose()`
+
+# Logistic Regression
