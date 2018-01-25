@@ -139,6 +139,29 @@ class Linear_regression():
     def hypothesis(self, xi):
         return self.weights.transpose() * xi.transpose()
 
+    def sigmoid(self, hypothesisRes):
+        return 1 / (1 + np.exp(-hypothesisRes))
+
+    def probabilityDistribution(self, y, xi):
+        hypres = self.hypothesis(xi)
+        return (self.sigmoid(hypres) ** y) * (1 - self.sigmoid(hypres)) ** (1 - y)
+
+    def likelihood(self, dataset, classes):
+        temp = 0
+        # for i in range(len(dataset)):
+        #     hypres = self.hypothesis(dataset[xi])
+        #     temp *= self.sigmoid(hypres)* (1 - self.sigmoid(hypres))** (1 - classes[i])
+        # return temp
+        for i in range(len(dataset)):
+            hypres = self.hypothesis(dataset[xi])
+            classes[i] * np.log(self.sigmoid(hypres)) + ((1 - classes[i]) * np.log(1 - self.sigmoid(hypres)))
+        return temp
+
+    def crossEntropy(self, dataset, classes):
+        return -(self.likelihood(dataset, classes)/len(dataset))
+
+
+
     def cost_function(self, dataset, dataclass):
         s = 0
         numExamples = dataset.shape[0] # number of rows / traning examples
