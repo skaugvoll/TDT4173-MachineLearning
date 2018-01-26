@@ -206,4 +206,4 @@ def main(task=1):
 
 
 if __name__ == "__main__":
-    main(0) # 0 = 2d, 1 = 3d
+    main(1) # 0 = 2d, 1 = 3d
