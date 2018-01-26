@@ -220,8 +220,7 @@ def main(task=1):
     lr.plotData2d()
     ######
     lr.train()
-
-    # lr.test()
+    lr.test()
     ######
 
     lr.plotLine2d()
