@@ -29,6 +29,7 @@ class Logistic_regression():
         self.learningRate = learningRate
 
         self.errors = []
+        self.testError = []
 
         # print(self.testingClass)
 
@@ -93,18 +94,18 @@ class Logistic_regression():
         y = (self.weights[0] + self.weights[1]*x) / (-self.weights[2])
 
         self.ax.plot(x, y.getA1())
-        self.fig.show()
+        # self.fig.show()
 
         print("Plottet line 2d")
 
-    def plotError(self):
+    def plotError(self, errors):
         fig = plt.figure()
-        plt.plot([ x for x in range(1, len(self.errors)+1)], self.errors)
-        plt.show()
+        plt.plot([ x for x in range(1, len(errors)+1)], errors)
+        # plt.show()
 
 
-    def info(self, e, cost):
-        print("Epoc: ", e, "\nError: ", cost, "\nWeights: ", self.weights)
+    def info(self, epoc, cost):
+        print("Epoc: ", epoc, "\nError: ", cost, "\nWeights: ", self.weights)
         print("\n"*2)
 
 
@@ -113,7 +114,6 @@ class Logistic_regression():
 
     def hypothesis(self, xi):
         res = self.weights.transpose() * xi.transpose() # transpose xi from [  ] to []
-        # print("RES: ", res)
 
         return res
 
@@ -121,30 +121,22 @@ class Logistic_regression():
         res = 1 / (1 + np.exp(-hypothesisRes))
         return res.getA1()[0]
 
-    # def probabilityDistribution(self, y, xi):
-    #     y = y.getA1()[0]
-    #     a = self.sigmoid(self.hypothesis(xi)).getA1()[0] # ==> o-(wTx)
-    #
-    #     return (a ** y) * (1 - a) ** (1 - y)
+    def probabilityDistribution(self, y, xi):
+        y = y.getA1()[0]
+        a = self.sigmoid(self.hypothesis(xi)).getA1()[0] # ==> o-(wTx)
+
+        return (a ** y) * (1 - a) ** (1 - y)
 
     def likelihood(self, dataset, classes):
         l = 0
         for i in range(len(dataset)):
             hypres = self.hypothesis(dataset[i])
             z = self.sigmoid(hypres)
-            # print("z: ", z)
-
             output = classes.getA1()[i]
-            # print("O: ", output)
             l +=  output * math.log(z) + (1 - output * math.log(1 - z))
-            # print("HR: ", hypres)
-            # print("Sigmoid: ", self.sigmoid(hypres))
-            # print("Prob: ", self.probabilityDistribution(classes[i], dataset[i]))
-            # temp = classes[i] * np.log(self.sigmoid(hypres)) + ((1 - classes[i]) * np.log(1 - self.sigmoid(hypres)))
         return l
 
     def crossEntropy(self, dataset, classes):
-
         l = 0
         for i in range(len(dataset)):
             hypres = self.hypothesis(dataset[i])
@@ -196,14 +188,25 @@ class Logistic_regression():
             self.errors.append(self.crossEntropy(self.trainingData, self.trainingClass))
             # self.info(e, cost)
             e += 1
+
+        self.info(e,self.errors[-1])
         print("DONE Training")
+        self.plotError(self.errors)
 
 
 
     def test(self):
         print("\n","Testing:\n")
-        testingRes = self.cost_function(self.testingData, self.testingClass)
-        print("Weights:\n" , self.weights, "\n", "Error: ", testingRes)
+
+        testRes = self.crossEntropy(self.testingData, self.testingClass)
+
+
+        print("Weights:\n" , self.weights, "\n", "Error: ", testRes)
+        print("DONE Testing")
+
+
+    def plot(self):
+        plt.show()
 
 
 
@@ -217,11 +220,12 @@ def main(task=1):
     lr.plotData2d()
     ######
     lr.train()
+
     # lr.test()
     ######
 
     lr.plotLine2d()
-    lr.plotError()
+    lr.plot()
     sleep(10)
 
 
