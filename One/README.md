@@ -1,4 +1,8 @@
 
+# TODO:
+- Fix testing; logistic regression.
+
+
 # Linear Regression
 Finn en rett linje mellom datapunkt, som gir minst distanse fra alle punkt til linjen.
 
@@ -33,12 +37,3 @@ Linear function
 `np.matrix.transpose()`
 
 # Logistic Regression
-
-
-
-
-Hvis sender inn type og directory:
-
-instansierer, objektet med type.
-
-så når vi skal trene og predikere, så har vi noe som velger rett hypothese, eller evt. skriver nye metoder for det, og gjenbruker plotting og lesing av data.
