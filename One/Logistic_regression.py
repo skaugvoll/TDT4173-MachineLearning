@@ -17,16 +17,18 @@ This need some refactoring!
 
 '''
 class Logistic_regression():
-    def __init__(self, trainingSet="cl_train_1.csv", testingSet="cl_test_1.csv", learningRate=0.1):
+    def __init__(self, trainingSet="cl_train_1.csv", testingSet="cl_test_1.csv", learningRate=0.1, circular=False):
         self.directory =  "datasets/classification/"
         self.train_filename = self.directory + trainingSet
         self.test_filename = self.directory + testingSet
 
-        self.trainingData, self.trainingClass = self.readData(self.train_filename)
-        self.testingData, self.testingClass = self.readData(self.test_filename)
+        self.trainingData, self.trainingClass = self.readData(self.train_filename, circular)
+        self.testingData, self.testingClass = self.readData(self.test_filename, circular)
 
-        self.weights = self.initWeights(self.trainingData, self.trainingClass)
+        self.weights = self.initWeights(self.trainingData, self.trainingClass, circular)
         self.learningRate = learningRate
+
+        # print(self.trainingData)
 
         self.errors = []
         self.testError = []
@@ -36,16 +38,23 @@ class Logistic_regression():
         #
 
 
-    def readData(self, dataset):
+    def readData(self, dataset, circular=False):
         with open(os.path.abspath(dataset)) as d:
             rows = ""
             classes = ""
             for l in d:
+                rowSquared = []
                 l = l.split(",") # [x1...xn,y]
                 row = "1"
                 for feature in range(len(l)-1): #  [x1,x2,y] = 3 i want 0,1 == 3 - 1 = 2 => 0, 1
+                    if circular:
+                        rowSquared.append(float(l[feature])**2)
                     row += "," + str(l[feature])
                 # matrix new row
+                if circular:
+                    for f in rowSquared:
+                        row += "," + str(f)
+
                 row += ";"
                 rows += row
                 classes += str(l[-1]) + ";" # add a new row with the class for this example
@@ -89,11 +98,18 @@ class Logistic_regression():
         # self.fig.show()
 
 
-    def plotLine2d(self):
+    def plotLine2d(self, circular=False):
         x = np.linspace(0,1)
-        y = (self.weights[0] + self.weights[1]*x) / (-self.weights[2])
 
-        self.ax.plot(x, y.getA1())
+        if circular:
+            y = np.linspace(0,1)
+            x,y = np.meshgrid(x,y)
+            w = self.weights
+            Z = (w.item(0) + w.item(1)*x + w.item(2)*y + (w.item(3)*(x**2)) + (w.item(4)*(y**2)))
+            self.ax.contour(x,y,Z,[0])
+        else:
+            y = (self.weights[0] + self.weights[1]*x) / (-self.weights[2])
+            self.ax.plot(x, y.getA1())
         # self.fig.show()
 
         print("Plottet line 2d")
@@ -109,8 +125,12 @@ class Logistic_regression():
         print("\n"*2)
 
 
-    def initWeights(self, X, y):
-        return np.matrix("0;0;0")
+    def initWeights(self, X, y, circular=False):
+        numWeights = len(X[0].getA1())
+        weights = ""
+        for i in range(numWeights):
+            weights += str(0) + ";"
+        return np.matrix(weights[:-1])
 
     def hypothesis(self, xi):
         res = self.weights.transpose() * xi.transpose() # transpose xi from [  ] to []
@@ -148,29 +168,15 @@ class Logistic_regression():
         return -(l  / len(dataset))
 
 
-        # res = -(self.likelihood(dataset, classes) / len(dataset))
-
-        # print(res)
-        # return res
-
-
     def updateRule(self):
         summation = 0
         numExamples = self.trainingData.shape[0] # number of rows / traning examples
         for i in range(numExamples):
-            # print("step: ", i)
             res = (self.sigmoid(self.hypothesis(self.trainingData[i])) - self.trainingClass[i]) * self.trainingData[i]
-            # print("RES updRl: ", res)
             summation += res
-
-        # print("HERE COMES W and S")
-        # print("W1: ",self.weights)
-        # print()
-        # print("S: ",summation * self.learningRate)
 
         self.weights = self.weights.transpose() - (self.learningRate * summation)
         self.weights = self.weights.transpose()
-        # print("W2: ",self.weights)
 
 
     def train(self):
@@ -212,7 +218,7 @@ class Logistic_regression():
 
 def main(task=1):
     if task == 2:
-        lr = Logistic_regression(trainingSet="cl_train_2.csv", testingSet="cl_test_2.csv") # 3d
+        lr = Logistic_regression(trainingSet="cl_train_2.csv", testingSet="cl_test_2.csv",learningRate=0.5, circular=True) # 3d
 
     else:
         lr = Logistic_regression()
@@ -222,8 +228,11 @@ def main(task=1):
     lr.train()
     lr.test()
     ######
+    if task == 2:
+        lr.plotLine2d(circular=True)
+    else:
+        lr.plotline2d()
 
-    lr.plotLine2d()
     lr.plot()
     sleep(10)
 
