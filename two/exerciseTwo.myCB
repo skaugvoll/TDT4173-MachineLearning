@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Project name="exerciseTwo" author="" >
+<instances name="PATIENT">
+  <instance id="PATIENT #5" >
+    <att name="sex" value="_unknown_" />
+    <att name="name" value="_unknown_" />
+    <att name="diagnosis" value="_unknown_" />
+    <att name="treatment" value="_unknown_" />
+    <att name="sleep_quality" value="_unknown_" />
+    <att name="primary_complaints" value="_unknown_" />
+    <att name="weight" value="_unknown_" />
+  </instance>
+  <instance id="PATIENT #4" >
+    <att name="sex" value="male" />
+    <att name="name" value="SAES" />
+    <att name="diagnosis" value="migrane" />
+    <att name="treatment" value="sleep" />
+    <att name="sleep_quality" value="low" />
+    <att name="primary_complaints" value="head_ache" />
+    <att name="weight" value="60.0" />
+  </instance>
+  <instance id="PATIENT #7" >
+    <att name="sex" value="female" />
+    <att name="name" value="Margit" />
+    <att name="diagnosis" value="food_poisening" />
+    <att name="treatment" value="sleep" />
+    <att name="sleep_quality" value="low" />
+    <att name="primary_complaints" value="nausea" />
+    <att name="weight" value="62.2" />
+  </instance>
+  <instance id="PATIENT #6" >
+    <att name="sex" value="male" />
+    <att name="name" value="Eirik" />
+    <att name="diagnosis" value="food_poisening" />
+    <att name="treatment" value="sleep" />
+    <att name="sleep_quality" value="low" />
+    <att name="primary_complaints" value="neck_pain" />
+    <att name="weight" value="66.8" />
+  </instance>
+  <instance id="PATIENT #1" >
+    <att name="sex" value="male" />
+    <att name="name" value="Thomas Wold" />
+    <att name="diagnosis" value="food_poisening" />
+    <att name="treatment" value="sleep" />
+    <att name="sleep_quality" value="medium" />
+    <att name="primary_complaints" value="nausea" />
+    <att name="weight" value="78.0" />
+  </instance>
+  <instance id="PATIENT #0" >
+    <att name="sex" value="male" />
+    <att name="name" value="Andreas" />
+    <att name="diagnosis" value="diarea" />
+    <att name="treatment" value="eat_oatmeal" />
+    <att name="sleep_quality" value="high" />
+    <att name="primary_complaints" value="tummy_ache" />
+    <att name="weight" value="78.5" />
+  </instance>
+  <instance id="PATIENT #3" >
+    <att name="sex" value="female" />
+    <att name="name" value="CD" />
+    <att name="diagnosis" value="migrane" />
+    <att name="treatment" value="take_pain_killers" />
+    <att name="sleep_quality" value="low" />
+    <att name="primary_complaints" value="head_ache" />
+    <att name="weight" value="100.0" />
+  </instance>
+  <instance id="PATIENT #2" >
+    <att name="sex" value="male" />
+    <att name="name" value="Martin" />
+    <att name="diagnosis" value="head_ache" />
+    <att name="treatment" value="take_pain_killers" />
+    <att name="sleep_quality" value="low" />
+    <att name="primary_complaints" value="back_pain" />
+    <att name="weight" value="80.0" />
+  </instance>
+  <instance id="PATIENT #9" >
+    <att name="sex" value="female" />
+    <att name="name" value="EB" />
+    <att name="diagnosis" value="diarea" />
+    <att name="treatment" value="eat_oatmeal" />
+    <att name="sleep_quality" value="medium" />
+    <att name="primary_complaints" value="back_pain" />
+    <att name="weight" value="69.0" />
+  </instance>
+  <instance id="PATIENT #8" >
+    <att name="sex" value="female" />
+    <att name="name" value="Reggiz" />
+    <att name="diagnosis" value="migrane" />
+    <att name="treatment" value="take_pain_killers" />
+    <att name="sleep_quality" value="medium" />
+    <att name="primary_complaints" value="head_ache" />
+    <att name="weight" value="53.0" />
+  </instance>
+</instances>
+<cb name="cb">
+     <case name="PATIENT #5" />
+     <case name="PATIENT #4" />
+     <case name="PATIENT #7" />
+     <case name="PATIENT #6" />
+     <case name="PATIENT #1" />
+     <case name="PATIENT #0" />
+     <case name="PATIENT #3" />
+     <case name="PATIENT #2" />
+     <case name="PATIENT #9" />
+     <case name="PATIENT #8" />
+</cb>
+</Project>

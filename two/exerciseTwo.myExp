@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Project name="exerciseTwo" author="" >
+<exp obj="PATIENT" type="Concept" >
+  <desc>
+              </desc>
+</exp>
+<exp obj="sex" c="PATIENT" type="AttributeDesc" >
+  <desc>
+              </desc>
+</exp>
+<exp obj="name" c="PATIENT" type="AttributeDesc" >
+  <desc>
+              </desc>
+</exp>
+<exp obj="diagnosis" c="PATIENT" type="AttributeDesc" >
+  <desc>
+              </desc>
+</exp>
+<exp obj="treatment" c="PATIENT" type="AttributeDesc" >
+  <desc>
+              </desc>
+</exp>
+<exp obj="sleep_quality" c="PATIENT" type="AttributeDesc" >
+  <desc>
+              </desc>
+</exp>
+<exp obj="primary_complaints" c="PATIENT" type="AttributeDesc" >
+  <desc>
+              </desc>
+</exp>
+<exp obj="weight" c="PATIENT" type="AttributeDesc" >
+  <desc>
+              </desc>
+</exp>
+<exp obj="PATIENT #1" c="PATIENT" type="Instance" >
+  <desc>
+  </desc>
+</exp>
+</Project>
