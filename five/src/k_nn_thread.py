@@ -21,12 +21,12 @@ class KNN_Thread(threading.Thread):
             if not self.q.empty():
                 case, label = self.q.get()
                 self.queueLock.release()
-                print("{} processing...".format(self.name))
+                # print("{} processing...".format(self.name))
                 self.processingMethod(case, label)
 
             else:
                 self.queueLock.release()
-                time.sleep(1)
+                # time.sleep(1)
 
 
         print("Exiting " + self.name)

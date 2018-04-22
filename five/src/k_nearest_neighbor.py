@@ -1,3 +1,13 @@
+"""k_nearest_neighbor.py: ML algorithm for predicting class of handwritten character."""
+
+__author__      = "Sigve Skaugvoll"
+__copyright__   = "Copyright 2018, skaugvoll.com"
+__license__     = "MIT"
+__version__     = "1.0.0"
+__maintainer__  = "Sigve Skaugvoll"
+__email__       = "sigve@skaugvoll.com"
+__status__      = "Development"
+
 from queue import PriorityQueue, Queue
 from scipy.spatial.distance import euclidean
 import operator, time, sys, threading
@@ -31,7 +41,7 @@ class KNN():
     # Step 1: find neighbors
     def find_neighbors(self, caseToClassify):
         for case, label in zip(self.training_cases, self.training_labels):
-            self.nearest_neighbors.put((euclidean(caseToClassify, case), next(self.tiebreaker), case, label))
+            self.nearest_neighbors.put((euclidean(caseToClassify, case), next(self.tiebreaker), case,  label))
 
 
     # Step 2: find classification based on k neighbors
@@ -61,7 +71,7 @@ class KNN():
         l = len(self.testing_cases)
         start = time.time()
         for case, label in zip(self.testing_cases, self.testing_labels):
-            print("Test case #{} / {} -- {:.2f}%".format(i, l, float(i)/float(l)))
+            # print("Test case #{} / {} -- {:.2f}%".format(i, l, float(i)/float(l)))
 
             self.nearest_neighbors = PriorityQueue()
             self.tiebreaker = count()
@@ -76,7 +86,7 @@ class KNN():
             i += 1
 
         end = time.time()
-        print("Time used: {:.3pyf}s\nAccuracy: {}\nCorrect: {} \nWrong: {}".format(end - start, (self.correct / len(self.testing_cases)) * 100, self.correct, self.wrong))
+        print("\nTime used: {:.2f}m\nAccuracy: {:.2f}\nCorrect: {} \nWrong: {}".format((end - start)/60, (self.correct / len(self.testing_cases)) * 100, self.correct, self.wrong))
 
 
     def threaded_processing(self, caseToClassify, caseToClassify_label):
@@ -129,6 +139,7 @@ class KNN():
         start = time.time()
         # Wait for queue to empty
         while not workQueue.empty():
+            # print("Remaining: {}".format(workQueue.qsize()))
             pass
 
         # Notify threads it's time to exit
@@ -141,8 +152,7 @@ class KNN():
 
         end = time.time()
 
-        print("Time used: {:.3pyf}s\nAccuracy: {}\nCorrect: {} \nWrong: {}".format(end - start, (
-        self.correct / len(self.testing_cases)) * 100, self.correct, self.wrong))
+        print("\nTime used: {:.2f}m\nAccuracy: {:.2f}\nCorrect: {} \nWrong: {}".format((end - start)/60, (self.correct / len(self.testing_cases)) * 100, self.correct, self.wrong))
 
 
 
@@ -157,16 +167,25 @@ class KNN():
             sys.exit(0)
         self.k = k
 
+    def reset(self):
+        self.nearest_neighbors = None  # used to keep track of which neighbors are closest
+        self.tiebreaker = None
+        self.correct = 0
+        self.wrong = 0
+
 
 
 def main():
     dg = DataGenerator()
+    dg.shuffle_data()
+
     training_cases, training_labels = dg.get_training_partition(percentage=.8)
     testing_cases, testing_labels = dg.get_testing_partition(percentage=.2)
 
     clf = KNN(training_cases, training_labels, testing_cases, testing_labels, k=10)
 
-    # clf.run()
+    clf.run()
+    print("\nNOW Threaded")
     clf.run_threaded(8)
 
 
@@ -174,5 +193,5 @@ def main():
 
 
 
-
-main()
+if __name__ == "__main__":
+    main()

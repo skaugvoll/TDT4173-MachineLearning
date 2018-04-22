@@ -2,7 +2,6 @@ import numpy as np
 import os, sys
 from PIL import Image
 
-
 class DataGenerator():
     def __init__(self, dataset="../chars74k-lite", normalized=True):
         self.dataset = dataset
@@ -41,6 +40,20 @@ class DataGenerator():
         return np.array(self.data), np.array(self.labels)
 
 
+    def shuffle_data(self):
+        data = self.get_zipped_data()
+        np.random.shuffle(data)
+        cases = []
+        labels = []
+        for case, label in data:
+            cases.append(case)
+            labels.append(label)
+
+        self.data = np.array(cases)
+        self.labels = np.array(labels)
+
+
+
     def char_to_int(self, char):
         return int(ord(char)) - 97
 
@@ -73,6 +86,7 @@ class DataGenerator():
             print("Invalid percantage; range: [0,1]")
             sys.exit(0)
 
+        percentage = 1 - percentage
         number_of_cases = int(len(self.data) * percentage)
         return self.data[number_of_cases:], self.labels[number_of_cases:]
 
@@ -83,11 +97,14 @@ class DataGenerator():
 
 def main():
     dg = DataGenerator()
+
     a = len(dg.get_cases())
     b,_ = dg.get_training_partition()
     b = len(b)
 
     print("\n{}\n{}".format(a,b))
+
+
 
 
 if __name__ == "__main__":
