@@ -1,4 +1,4 @@
-"""k_nearest_neighbor.py: ML algorithm for predicting class of handwritten character."""
+"""k_nearest_neighbor.py: ML algorithm for predicting class of handwritten character. Based on neighbors"""
 
 __author__      = "Sigve Skaugvoll"
 __copyright__   = "Copyright 2018, skaugvoll.com"
@@ -15,8 +15,6 @@ from itertools import count
 
 from data_generator import DataGenerator
 from k_nn_thread import KNN_Thread
-
-
 
 
 class KNN():
@@ -71,7 +69,7 @@ class KNN():
         l = len(self.testing_cases)
         start = time.time()
         for case, label in zip(self.testing_cases, self.testing_labels):
-            # print("Test case #{} / {} -- {:.2f}%".format(i, l, float(i)/float(l)))
+            print("Test case #{} / {} -- {:.2f}%".format(i, l, float(i)/float(l)))
 
             self.nearest_neighbors = PriorityQueue()
             self.tiebreaker = count()
@@ -86,7 +84,7 @@ class KNN():
             i += 1
 
         end = time.time()
-        print("\nTime used: {:.2f}m\nAccuracy: {:.2f}\nCorrect: {} \nWrong: {}".format((end - start)/60, (self.correct / len(self.testing_cases)) * 100, self.correct, self.wrong))
+        print("\nTime used: {:.2f}m\nAccuracy: {:.2f}%\nCorrect: {} \nWrong: {}".format((end - start)/60, (self.correct / len(self.testing_cases)) * 100, self.correct, self.wrong))
 
 
     def threaded_processing(self, caseToClassify, caseToClassify_label):
@@ -152,7 +150,7 @@ class KNN():
 
         end = time.time()
 
-        print("\nTime used: {:.2f}m\nAccuracy: {:.2f}\nCorrect: {} \nWrong: {}".format((end - start)/60, (self.correct / len(self.testing_cases)) * 100, self.correct, self.wrong))
+        print("\nTime used: {:.2f}m\nAccuracy: {:.2f}%\nCorrect: {} \nWrong: {}".format((end - start)/60, (self.correct / len(self.testing_cases)) * 100, self.correct, self.wrong))
 
 
 
@@ -184,9 +182,14 @@ def main():
 
     clf = KNN(training_cases, training_labels, testing_cases, testing_labels, k=10)
 
+    print("Running One Thread")
     clf.run()
-    print("\nNOW Threaded")
-    clf.run_threaded(8)
+
+    clf.reset()
+
+    num_threads = 8
+    print("\nRunning {} Threads".format(num_threads))
+    clf.run_threaded(num_threads)
 
 
 

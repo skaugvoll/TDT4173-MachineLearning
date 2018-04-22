@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io/api/linux,pycharm,python
 
+five/.idea/*
+
+
 ### Linux ###
 *~
 

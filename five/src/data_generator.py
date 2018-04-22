@@ -9,7 +9,7 @@ class DataGenerator():
         self.labels = []
 
         directories = [x[1] for x in os.walk(self.dataset)][0]
-        print("Len: {} :: subDirs: {}".format(len(directories), directories))
+        # print("Len: {} :: subDirs: {}".format(len(directories), directories))
 
         for dir in directories:
             _,_ = self.generate_data(dataset +"/" + dir, normalized=normalized)
@@ -53,7 +53,6 @@ class DataGenerator():
         self.labels = np.array(labels)
 
 
-
     def char_to_int(self, char):
         return int(ord(char)) - 97
 
@@ -89,9 +88,6 @@ class DataGenerator():
         percentage = 1 - percentage
         number_of_cases = int(len(self.data) * percentage)
         return self.data[number_of_cases:], self.labels[number_of_cases:]
-
-
-
 
 
 
