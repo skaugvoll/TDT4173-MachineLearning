@@ -7,6 +7,7 @@ Authors: Eirik Baug, Martin Stigen, Sigve Skaugvoll
     -  numpy
     - scipy
     - pillow
+    - tensorflow
 - chars74k-lite (data set)
 
 ### How to install

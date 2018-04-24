@@ -90,6 +90,18 @@ class DataGenerator():
         return self.data[number_of_cases:], self.labels[number_of_cases:]
 
 
+    def make_onehot_labels(self):
+        labels = []
+        for l in self.labels:
+            case_onehot = []
+            for i in range(0, 26):
+                if i == l:
+                    case_onehot.append(1)
+                else:
+                    case_onehot.append(0)
+            labels.append(case_onehot)
+
+        self.labels = np.array(labels)
 
 def main():
     dg = DataGenerator()

@@ -15,7 +15,7 @@ def main():
         "scipy",
         "numpy",
         "pillow",
-
+        "tensorflow"
     ]
 
 if __name__ == "__main__":
