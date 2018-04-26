@@ -17,9 +17,13 @@ def main():
     training_cases = training_cases.astype(np.float32)
     testing_cases = testing_cases.astype(np.float32)
 
+
+
     # Create the Conv model
     print("Creating model")
-    model = init_model()
+    img_height = 20
+    img_width = 20
+    model = init_model(img_height, img_width)
 
 
     # Train the model

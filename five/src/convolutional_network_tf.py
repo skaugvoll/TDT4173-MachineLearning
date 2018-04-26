@@ -28,21 +28,25 @@ def _init_global_network_parameters(num_features, num_labels, dropProb):
     num_classes = num_labels
     dropout = dropProb
 
-def init_global_parameters():
+def init_global_parameters(img_height, img_width, features):
+    if (features == None):
+        features = img_height * img_width
+
+
     # Problem Specific Parameters
     # CHAR74 has pictures where ALL of them have the same dimensions 20x20pixels
-    pic_height = 20
-    pic_width = 20
+    pic_height = img_height
+    pic_width = img_width
     _init_global_problem_specific_parameters(pic_height, pic_width)
 
     # Training Parameters
     learning_rate = 0.001
-    num_steps = 2000
+    num_steps = 100 #2000
     batch_size = 128
     _init_global_training_parameters(learning_rate, num_steps, batch_size)
 
     # Network Parameters
-    num_input = 400  # CHAR74 data input (img shape: 20*20 = 400)
+    num_input = features  # CHAR74 data input (img shape: 20*20 = 400)
     num_classes = 26  # CHAR74 total classes (a-z chars = 26)
     dropout = 0.25  # Dropout, probability to drop a unit
     _init_global_network_parameters(num_input, num_classes, dropout)
@@ -98,7 +102,15 @@ def model_fn(features, labels, mode):
 
     # If prediction mode, early return
     if mode == tf.estimator.ModeKeys.PREDICT:
-        return tf.estimator.EstimatorSpec(mode, predictions=pred_classes)
+        print("PRED bitches")
+        predictions = {
+            "class_ids": pred_classes[:, tf.newaxis],
+            "probabilities": pred_probas,
+            "logits": logits_test
+        }
+        es = tf.estimator.EstimatorSpec(mode, predictions=predictions)
+        return es
+
 
     # Define loss and optimizer
     loss_op = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits_train, labels=tf.cast(labels, dtype=tf.int32)))
@@ -120,8 +132,8 @@ def model_fn(features, labels, mode):
     return estim_specs
 
 
-def init_model():
-    init_global_parameters()
+def init_model(img_height=20, img_width=20, features=None):
+    init_global_parameters(img_height, img_width, features)
     model = tf.estimator.Estimator(model_fn)
 
     return model
@@ -149,6 +161,26 @@ def test_conv_net(model, testing_cases, testing_labels):
     return model, accuracy
 
 
+def prediction_conv_net(model, testing_case, testing_label):
+    # Evaluate the Model
+    # Define the input function for evaluating
+    input_fn = tf.estimator.inputs.numpy_input_fn(x={'images': testing_case}, y=testing_label, batch_size=batch_size,
+                                                  shuffle=False)
+    # Use the Estimator 'prediction' method
+    e = model.predict(input_fn) # e is a generator object now. now caluclations are done, but it knows what to do..
+    print("done predicting")
+
+    # use the generator to generate the class_ids, probabilities and logits
+    res = next(e)
+
+    print("Pred-Estimator: /n{}\n".format(res))
+
+    # get the probabilities
+    prob = res['probabilities']
+
+    return model, prob
+
+
 
 def run_char74():
     # Create | import the data
@@ -164,7 +196,7 @@ def run_char74():
     testing_cases = testing_cases.astype(np.float32)
 
     # init global variables, instead of passing as parameters. - because cleaner and more readability
-    init_global_parameters()
+    init_global_parameters(20, 20, 400)
 
 
     # Build the Estimator
@@ -172,16 +204,20 @@ def run_char74():
 
     # Train the model
     print("Now training the model with:\nLR: {}\n#Steps: {}\nBatch Size: {}\n".format(learning_rate, num_steps, batch_size))
-    model = train_conv_net(model, training_cases, training_labels)
-
+    model = train_conv_net(model, training_cases[:1], training_labels[:1])
 
     # Test the model
-    print("Done training, now testing the model\n")
-    _, accuracy = test_conv_net(model, testing_cases, testing_labels)
+    print("Done training, now testing the model")
+    _, accuracy = test_conv_net(model, testing_cases[:1], testing_labels[:1])
 
     # print accuracy of the model
     print("Testing Accuracy: {:.2f}%\n".format(accuracy * 100))
 
+
+    # Prediction by the model
+    print("now prediction using the model")
+    model, prob = prediction_conv_net(model, testing_cases[:1], testing_labels[:1])
+    print("Predictions probabilities:\n{}\n".format(prob))
 
 
 if __name__ == "__main__":
