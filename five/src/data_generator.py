@@ -7,24 +7,28 @@ class DataGenerator():
         self.dataset = dataset
         self.data = []
         self.labels = []
+        self.image_names = []
+        self.img_dimensions = []
 
         directories = [x[1] for x in os.walk(self.dataset)][0]
-        # print("Len: {} :: subDirs: {}".format(len(directories), directories))
+        print("Len: {} :: subDirs: {}".format(len(directories), directories))
 
         for dir in directories:
-            _,_ = self.generate_data(dataset +"/" + dir, normalized=normalized)
+            _,_ = self._generate_data(dataset +"/" + dir, normalized=normalized)
 
         self.data = np.array(self.data)
         self.labels = np.array(self.labels)
 
 
 
-    def generate_data(self, subdir, normalized):
+    def _generate_data(self, subdir, normalized):
         old_length = len(self.data)
 
         for file in os.listdir(subdir):
             if file.endswith(".jpg"):
+                self.image_names.append("{}/{}".format(subdir,file))
                 img = Image.open("{}/{}".format(subdir, file))
+                self.img_dimensions.append(img.size)
                 pixels = list(img.getdata())
                 if normalized:
                     pixels = [float(x)/255 for x in pixels]
@@ -59,6 +63,9 @@ class DataGenerator():
     def int_to_char(self, int):
         return chr(int + 97)
 
+    def get_dimensions(self, case_number):
+        return self.img_dimensions[case_number]
+
     def get_cases(self):
         return self.data
 
@@ -67,6 +74,9 @@ class DataGenerator():
 
     def get_data(self):
         return self.data, self.labels
+
+    def get_image_names(self):
+        return self.image_names
 
     def get_zipped_data(self):
         return [[c,y] for c,y in zip(self.data, self.labels)]
@@ -106,11 +116,16 @@ class DataGenerator():
 def main():
     dg = DataGenerator()
 
-    a = len(dg.get_cases())
-    b,_ = dg.get_training_partition()
-    b = len(b)
+    # a = len(dg.get_cases())
+    # b,_ = dg.get_training_partition()
+    # b = len(b)
+    # print("\n{}\n{}".format(a,b))
 
-    print("\n{}\n{}".format(a,b))
+
+    images = dg.get_image_names()
+    print(images)
+
+
 
 
 

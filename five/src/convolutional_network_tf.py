@@ -52,6 +52,25 @@ def init_global_parameters(img_height, img_width, features):
     _init_global_network_parameters(num_input, num_classes, dropout)
 
 
+def change_num_input(features):
+    global num_input
+    num_input = features
+
+
+def change_parameters(*args):
+    parameters = ["pic_height", "pic_width", "num_input", "num_classes"]
+    for idx, arg in enumerate(*args):
+        print("ARG: ", arg)
+        if (arg == "" or arg == None):
+            continue
+
+        par = parameters[idx]
+        eval(par + " = " + str(arg))
+
+
+
+
+
 # Create the neural network
 def conv_net(x_dict, n_classes, dropout, reuse, is_training):
     # Define a scope for reusing the variables
@@ -102,7 +121,6 @@ def model_fn(features, labels, mode):
 
     # If prediction mode, early return
     if mode == tf.estimator.ModeKeys.PREDICT:
-        print("PRED bitches")
         predictions = {
             "class_ids": pred_classes[:, tf.newaxis],
             "probabilities": pred_probas,
@@ -162,23 +180,23 @@ def test_conv_net(model, testing_cases, testing_labels):
 
 
 def prediction_conv_net(model, testing_case, testing_label):
-    # Evaluate the Model
-    # Define the input function for evaluating
+    # Define the input function for PREDICTION
     input_fn = tf.estimator.inputs.numpy_input_fn(x={'images': testing_case}, y=testing_label, batch_size=batch_size,
                                                   shuffle=False)
     # Use the Estimator 'prediction' method
     e = model.predict(input_fn) # e is a generator object now. now caluclations are done, but it knows what to do..
-    print("done predicting")
 
     # use the generator to generate the class_ids, probabilities and logits
+
     res = next(e)
 
-    print("Pred-Estimator: /n{}\n".format(res))
+    # print("Pred-Estimator:\n{}\n".format(res))
 
     # get the probabilities
     prob = res['probabilities']
 
-    return model, prob
+
+    return model, e, prob
 
 
 
@@ -204,19 +222,22 @@ def run_char74():
 
     # Train the model
     print("Now training the model with:\nLR: {}\n#Steps: {}\nBatch Size: {}\n".format(learning_rate, num_steps, batch_size))
-    model = train_conv_net(model, training_cases[:1], training_labels[:1])
+    model = train_conv_net(model, training_cases, training_labels)
 
     # Test the model
     print("Done training, now testing the model")
-    _, accuracy = test_conv_net(model, testing_cases[:1], testing_labels[:1])
+    _, accuracy = test_conv_net(model, testing_cases, testing_labels)
 
     # print accuracy of the model
     print("Testing Accuracy: {:.2f}%\n".format(accuracy * 100))
 
 
-    # Prediction by the model
+    # Prediction by the model, predict the first test case
+    # if more than one case to predict, use estimator to get results for each
     print("now prediction using the model")
-    model, prob = prediction_conv_net(model, testing_cases[:1], testing_labels[:1])
+
+    print("blaa", testing_cases[:1].shape, testing_labels[:1])
+    model, estimator, prob = prediction_conv_net(model, testing_cases[:1], testing_labels[:1])
     print("Predictions probabilities:\n{}\n".format(prob))
 
 
