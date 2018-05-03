@@ -10,8 +10,9 @@ def ocr(trainingset="../chars74k-lite", testingset="../detection-images"):
     # INITIALIZATION
     #
     #########
-    window_character_threshold = 0.9
+    window_character_threshold = 0.95
     patches_containing_charater = []
+    characters = set()
 
 
     # TRAINING CASES
@@ -91,9 +92,10 @@ def ocr(trainingset="../chars74k-lite", testingset="../detection-images"):
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
         if probability > window_character_threshold:
-            print(template.format(dg.int_to_char(class_id), 100 * probability))
+            # print(template.format(dg.int_to_char(class_id), 100 * probability))
+            characters.add(dg.int_to_char(class_id))
 
-
+    print("Characters found with threshold " + str(window_character_threshold) + ":" + str(characters))
 
     # print(len(get_window(testing_cases[0], 0, window_width, window_height, 200)))
 
