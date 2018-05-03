@@ -41,7 +41,7 @@ def init_global_parameters(img_height, img_width, features):
 
     # Training Parameters
     learning_rate = 0.001
-    num_steps = 200 #2000
+    num_steps = 2000 #2000
     batch_size = 128
     _init_global_training_parameters(learning_rate, num_steps, batch_size)
 
@@ -179,9 +179,9 @@ def test_conv_net(model, testing_cases, testing_labels):
     return model, accuracy
 
 
-def prediction_conv_net(model, testing_case, testing_label):
+def prediction_conv_net(model, testing_case):
     # Define the input function for PREDICTION
-    input_fn = tf.estimator.inputs.numpy_input_fn(x={'images': testing_case}, y=testing_label, batch_size=batch_size,
+    input_fn = tf.estimator.inputs.numpy_input_fn(x={'images': testing_case}, batch_size=batch_size,
                                                   shuffle=False)
     # Use the Estimator 'prediction' method
     e = model.predict(input_fn) # e is a generator object now. now caluclations are done, but it knows what to do..
@@ -189,7 +189,7 @@ def prediction_conv_net(model, testing_case, testing_label):
     # use the generator to generate the class_ids, probabilities and logits
 
     # print(list(e))
-    res = next(e)
+    # res = next(e)
 
     # print("Pred-Estimator:\n{}\n".format(res))
 
@@ -197,7 +197,7 @@ def prediction_conv_net(model, testing_case, testing_label):
     # prob = res['probabilities']
     # classes = res['class_ids']
 
-    return model, e, res
+    return e
 
 
 

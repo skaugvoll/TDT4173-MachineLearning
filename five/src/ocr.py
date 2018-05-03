@@ -10,7 +10,7 @@ def ocr(trainingset="../chars74k-lite", testingset="../detection-images"):
     # INITIALIZATION
     #
     #########
-    window_character_threshold = 0.5
+    window_character_threshold = 0.9
     patches_containing_charater = []
 
 
@@ -85,8 +85,15 @@ def ocr(trainingset="../chars74k-lite", testingset="../detection-images"):
 
     windows = np.array(windows)
     print("Predicting windows")
-    model, estimator, prob, = prediction_conv_net(model, windows, None)
-    print(prob)
+    template = ('Prediction is "{}" ({:.1f}%)')
+    predictions = prediction_conv_net(model, windows)
+    for pred_dict in predictions:
+        class_id = pred_dict['class_ids'][0]
+        probability = pred_dict['probabilities'][class_id]
+        if probability > window_character_threshold:
+            print(template.format(dg.int_to_char(class_id), 100 * probability))
+
+
 
     # print(len(get_window(testing_cases[0], 0, window_width, window_height, 200)))
 
