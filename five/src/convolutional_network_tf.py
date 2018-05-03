@@ -41,7 +41,7 @@ def init_global_parameters(img_height, img_width, features):
 
     # Training Parameters
     learning_rate = 0.001
-    num_steps = 100 #2000
+    num_steps = 200 #2000
     batch_size = 128
     _init_global_training_parameters(learning_rate, num_steps, batch_size)
 
@@ -188,15 +188,16 @@ def prediction_conv_net(model, testing_case, testing_label):
 
     # use the generator to generate the class_ids, probabilities and logits
 
+    # print(list(e))
     res = next(e)
 
     # print("Pred-Estimator:\n{}\n".format(res))
 
     # get the probabilities
-    prob = res['probabilities']
+    # prob = res['probabilities']
+    # classes = res['class_ids']
 
-
-    return model, e, prob
+    return model, e, res
 
 
 
@@ -239,6 +240,7 @@ def run_char74():
     print("blaa", testing_cases[:1].shape, testing_labels[:1])
     model, estimator, prob = prediction_conv_net(model, testing_cases[:1], testing_labels[:1])
     print("Predictions probabilities:\n{}\n".format(prob))
+    # print("Predictions probabilities:\n{}\n".format(classes))
 
 
 if __name__ == "__main__":

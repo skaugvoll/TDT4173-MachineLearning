@@ -63,29 +63,52 @@ def ocr(trainingset="../chars74k-lite", testingset="../detection-images"):
     # create the classifier to run over the windows
     # Create the Conv model
     print("Creating model")
-    img_height = 20
-    img_width = 20
-    model = init_model(img_height, img_width)
+    window_width = 20
+    window_height = 20
+    image_width = 200
+    image_height = 200
+
+    model = init_model(window_height, window_width)
 
     # Train the model
     print("Training model")
     model = train_conv_net(model, training_cases, training_labels)
 
-    for label_idx, case in enumerate(cases_reshaped):
-        windows = window_stack(case, 1, 2)
-        windows = windows.astype(np.float32)
-        print(windows.shape, windows[0].shape)
-        for window in windows:
-            window = window.reshape(1,400)
+    print("Creating windows")
+    columns = image_width - window_width
+    rows = image_height - window_height
+    windows = []
+    for i in range(columns):
+        for j in range(rows):
+            index = i + j * image_width
+            windows.append(get_window(testing_cases[0], index, window_width, window_height, image_width).reshape(1, 400))
 
-            # print(window, window.shape, [testing_labels[label_idx]])
-            model, estimator_generator, prob = prediction_conv_net(model, window, np.array([testing_labels[label_idx]]))
+    windows = np.array(windows)
+    print("Predicting windows")
+    model, estimator, prob, = prediction_conv_net(model, windows, None)
+    print(prob)
+
+    # print(len(get_window(testing_cases[0], 0, window_width, window_height, 200)))
+
+    # for label_idx, case in enumerate(cases_reshaped[0]):
+    #     windows = window_stack(case, 1, 2)
+    #     windows = windows.astype(np.float32)
+    #     print(windows.shape, windows[0].shape)
+    #     for window in windows:
+    #         window = window.reshape(1,400)
+    #
+    #         # print(window, window.shape, [testing_labels[label_idx]])
+    #         model, estimator_generator, prob = prediction_conv_net(model, window, np.array([testing_labels[label_idx]]))
 
 
+def get_window(array, index, window_width, window_height, img_width):
+    window = []
+    current_index = index
+    for i in range(window_height):
+        window.extend(array[current_index:current_index + window_width])
+        current_index += img_width
 
-
-
-
+    return np.array(window, np.float32)
 
 
 def window_stack(a, stepsize=1, width=3):
