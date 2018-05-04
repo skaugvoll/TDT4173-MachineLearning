@@ -39,7 +39,7 @@ def init_global_parameters(img_height, img_width, features):
     _init_global_problem_specific_parameters(pic_height, pic_width)
 
     # Training Parameters
-    learning_rate = 0.001
+    learning_rate = 0.001 #0.001
     num_steps = 2000 #2000
     batch_size = 128
     _init_global_training_parameters(learning_rate, num_steps, batch_size)
@@ -237,7 +237,7 @@ def run_char74():
     print("now prediction using the model")
 
     print("blaa", testing_cases[:1].shape, testing_labels[:1])
-    model, estimator, prob = prediction_conv_net(model, testing_cases[:1])
+    prob = prediction_conv_net(model, testing_cases[:1])
     print("Predictions probabilities:\n{}\n".format(prob))
     # print("Predictions probabilities:\n{}\n".format(classes))
 

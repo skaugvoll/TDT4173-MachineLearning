@@ -3,7 +3,7 @@ import os, sys
 from PIL import Image
 
 class DataGenerator():
-    def __init__(self, dataset="../chars74k-lite", normalized=True):
+    def __init__(self, dataset="../chars74k-lite", normalized=True, threshold=None):
         self.dataset = dataset
         self.data = []
         self.labels = []
@@ -14,14 +14,14 @@ class DataGenerator():
         print("Len: {} :: subDirs: {}".format(len(directories), directories))
 
         for dir in directories:
-            _,_ = self._generate_data(dataset +"/" + dir, normalized=normalized)
+            _,_ = self._generate_data(dataset +"/" + dir, normalized=normalized, threshold=threshold)
 
         self.data = np.array(self.data)
         self.labels = np.array(self.labels)
 
 
 
-    def _generate_data(self, subdir, normalized):
+    def _generate_data(self, subdir, normalized, threshold):
         old_length = len(self.data)
 
         for file in os.listdir(subdir):
@@ -32,6 +32,9 @@ class DataGenerator():
                 pixels = list(img.getdata())
                 if normalized:
                     pixels = [float(x)/255 for x in pixels]
+
+                if threshold:
+                    pixels = [1 if x >= threshold else 0 for x in pixels]
 
                 self.data.append(pixels)
 
