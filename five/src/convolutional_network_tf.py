@@ -39,15 +39,15 @@ def init_global_parameters(img_height, img_width, features):
     _init_global_problem_specific_parameters(pic_height, pic_width)
 
     # Training Parameters
-    learning_rate = 0.0015 #0.001
-    num_steps = 500 #2000
-    batch_size = 50
+    learning_rate = 0.001 #0.001
+    num_steps =  2000
+    batch_size = 128
     _init_global_training_parameters(learning_rate, num_steps, batch_size)
 
     # Network Parameters
     num_input = features  # CHAR74 data input (img shape: 20*20 = 400)
     num_classes = 26  # CHAR74 total classes (a-z chars = 26)
-    dropout = 0.5  # Dropout, probability to drop a unit
+    dropout = 0.25  # Dropout, probability to drop a unit
     _init_global_network_parameters(num_input, num_classes, dropout)
 
 
