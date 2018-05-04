@@ -9,7 +9,6 @@ import numpy as np
 import tensorflow as tf
 
 
-
 def _init_global_problem_specific_parameters(img_height, img_width):
     global pic_height, pic_width
     pic_height = img_height
@@ -238,7 +237,7 @@ def run_char74():
     print("now prediction using the model")
 
     print("blaa", testing_cases[:1].shape, testing_labels[:1])
-    model, estimator, prob = prediction_conv_net(model, testing_cases[:1], testing_labels[:1])
+    model, estimator, prob = prediction_conv_net(model, testing_cases[:1])
     print("Predictions probabilities:\n{}\n".format(prob))
     # print("Predictions probabilities:\n{}\n".format(classes))
 

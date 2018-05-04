@@ -17,6 +17,7 @@ def main():
         "pillow",
         "tensorflow"
     ]
+    try_or_install(packages)
 
 if __name__ == "__main__":
     main()
