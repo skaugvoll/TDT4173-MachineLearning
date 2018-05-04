@@ -202,7 +202,7 @@ def prediction_conv_net(model, testing_case):
 
 def run_char74():
     # Create | import the data
-    dg = DataGenerator(dataset="../chars74k-lite", normalized=True)
+    dg = DataGenerator(dataset="../chars74k-lite", normalized=False, threshold=0.5)
     dg.shuffle_data()
 
     # extract the training and testing data from our data-generator

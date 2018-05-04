@@ -33,8 +33,10 @@ class DataGenerator():
                 if normalized:
                     pixels = [float(x)/255 for x in pixels]
 
-                if threshold:
+                if threshold and normalized:
                     pixels = [1 if x >= threshold else 0 for x in pixels]
+                elif threshold:
+                    pixels = [1 if x >= threshold * 255 else 0 for x in pixels]
 
                 self.data.append(pixels)
 
